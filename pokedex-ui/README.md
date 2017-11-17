@@ -38,7 +38,7 @@ _Runs in pord by default, don't forget to launch the `pokeapi`_
 | test     | npm test      | yarn test  | test |
 | start    | npm start     | yarn start | dev  |
 | build    | npm run build | yarn build | prod |
-| serve    | npx serve -s build         | prod |
+| serve    | npx serve -s build |       | prod |
 
 ## Known Issues
 
