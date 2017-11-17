@@ -88,7 +88,6 @@ export const sagas = [
     yield takeEvery([loadPokemons], function * (action) {
       const loadFunction = action.payload
       const {pokemons, loadNextPage} = yield call(loadFunction)
-      // const restore = R.map(R.pipe(restorePokemon, R.when(R.complement(R.isNil), restorePokemon)))
       yield put(appendPokemons(R.map(p => {
         const pokemon = restorePokemon(p)
         return R.assoc('bookmarked', !!pokemon, pokemon || p)
