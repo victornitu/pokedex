@@ -1,13 +1,12 @@
 package com.vvfluxembourg.pokedex.api
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.io.StdIn
+import scala.concurrent.{ ExecutionContext, Future }
 
 object ApiServer extends App with PokemonRoutes {
 
@@ -20,16 +19,10 @@ object ApiServer extends App with PokemonRoutes {
 
   lazy val routes: Route = pokemonRoutes
 
-  val serverBindingFuture: Future[ServerBinding] = Http().bindAndHandle(routes, "localhost", 8080)
+  val host = "0.0.0.0"
+  val port = 8080
 
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+  val serverBindingFuture: Future[ServerBinding] = Http().bindAndHandle(routes, host, port)
 
-  StdIn.readLine()
-
-  serverBindingFuture
-    .flatMap(_.unbind())
-    .onComplete { done =>
-      done.failed.map { ex => log.error(ex, "Failed unbinding") }
-      system.terminate()
-    }
+  println(s"Server online at http://$host:$port/")
 }

@@ -1,6 +1,6 @@
 package com.vvfluxembourg.pokedex.api
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import akka.event.Logging
 
 import scala.concurrent.duration._
@@ -24,7 +24,7 @@ trait PokemonRoutes extends JsonSupport {
 
   def pokemonRegistryActor: ActorRef
 
-  implicit lazy val timeout: Timeout = Timeout(5.seconds)
+  implicit lazy val timeout: Timeout = Timeout(10.seconds)
 
   lazy val pokemonRoutes: Route =
     pathPrefix("pokemon" / Segment) { name =>
@@ -47,5 +47,15 @@ trait PokemonRoutes extends JsonSupport {
             }
           }
         }
+    } ~ pathPrefix("type" / Segment) { name =>
+      pathEnd {
+        get {
+          val pokemonType: Future[Option[PokemonType]] =
+            (pokemonRegistryActor ? GetPokemonType(name)).mapTo[Option[PokemonType]]
+          rejectEmptyResponse {
+            complete(pokemonType)
+          }
+        }
+      }
     }
 }
