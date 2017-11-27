@@ -1,10 +1,27 @@
 version: '3'
 services:
-  app-api:
+  cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  pokeapi:
     build: ./pokeapi-master
     ports:
       - "8000:8000"
-  app-ui:
+  api:
+    build: ./pokedex-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cache
+      - pokeapi
+    links:
+      - cache
+      - pokeapi
+  ui:
     build: ./pokedex-ui
     ports:
       - "5000:5000"
+    depends_on:
+      - pokeapi
+      - api
